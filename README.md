@@ -1,2 +1,2 @@
-# BACK_ESTADO_CUENTAS
-Backend para la consulta y factura de estado de cuentas.
+# BACK_MELO
+RESTfulAPI para el registro de usuarios y consulta de estados de cuentas

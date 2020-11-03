@@ -1,0 +1,58 @@
+
+version: '3.7'
+services:
+  app: 
+    image: irving1596/back_melo:v1
+    container_name: back_melo
+    ports:
+      - "3000:3000"
+   # volumes:
+   #  - type: bind
+   #    source: ./backend
+   #    target: /usr/back
+    env_file:
+      - ./server.env
+   #   DBHOST: bdmelo
+   #   PORT: ${PORT}
+  #  JWT_SECRET: ${JWT_SECRET}
+   #   DBUSER: ${DBUSER}
+   #   DBPASSWORD: ${DBPASSWORD}
+    #  DBNAME: ${DBNAME}
+    depends_on:
+      - bdserver
+    networks:
+      - netmelo
+  bdserver:
+    image: store/oracle/mysql-enterprise-server:8.0
+   # command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    container_name: bdmelo
+  #  environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${MYSQL_DATABASE}
+  #     MYSQL_USER: melo
+  #     MYSQL_PASSWORD: melo
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./BD:/docker-entrypoint-initdb.d
+      - ./BD/mysql:/var/lib/mysql
+    env_file:
+      - ./bd.env
+    networks:
+      netmelo:
+            aliases:
+              - bdbanca
+            ipv4_address: 172.16.238.10
+            ipv6_address: 2001:3984:3989::10 
+
+networks:
+  netmelo:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: "172.16.238.0/24"
+      -
+        subnet: "2001:3984:3989::/64"
